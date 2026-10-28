@@ -83,7 +83,7 @@ label.opt{display:inline-flex;align-items:center;gap:6px}
     tags: q.get('tags') === '1',
     show: (q.get('show') || '').split(',').filter(function(k){ return KEYS.indexOf(k) >= 0; })
   };
-  if (!state.show.length) state.show = state.mode === 'single' ? ['a'] : ['control','a'];
+  if (!state.show.length) state.show = state.mode === 'single' ? ['a'] : ['control','a','b'];
   if (state.mode === 'single') state.show = state.show.slice(0,1);
 
   var chipsEl = document.getElementById('chips'), stage = document.getElementById('stage'), hint = document.getElementById('hint');
