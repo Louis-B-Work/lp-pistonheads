@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Apply for car finance – PistonHeads prototype</title>
+<style>
+:root{
+  --purple:#6905F2; --green:#00D4B5; --black:#000;
+  --tint:#F0E6FE; --tint-live:#F5EEFE; --line:#DCCEF7;
+  --muted:rgba(0,0,0,.7);
+  --font:"Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#fff;color:var(--black);font:400 16px/1.4 var(--font)}
+img{display:block;max-width:100%}
+a{color:inherit}
+b,strong,h1,h2{font-weight:700}
+h1,h2,p,ul{margin:0}
+ul{padding:0;list-style:none}
+
+/* review tooling (only with ?review=1) */
+.pages{display:none}
+.review .pages{display:flex;gap:4px;align-items:center;height:36px;padding:0 16px;background:#fff;border-bottom:1px solid #DCCEF7;font:700 13px "Helvetica Neue",Helvetica,Arial,sans-serif;position:sticky;top:0;z-index:20;box-sizing:border-box}
+.pages a{padding:3px 10px;border-radius:99px;color:#6905F2;text-decoration:none}
+.pages a:hover{background:#F0E6FE}
+.pages a[aria-current]{background:#6905F2;color:#fff}
+#review{display:none}
+.review #review{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:6px 12px;background:#222;color:#fff;font-size:12px}
+#review a{color:#fff;padding:2px 8px;border:1px solid #888;border-radius:99px;text-decoration:none}
+#review a.on{background:#fff;color:#000}
+.cmp{display:none;margin-left:6px;padding:1px 6px;border-radius:4px;background:#E32739;color:#fff;font-size:11px;font-weight:700;vertical-align:middle;white-space:nowrap}
+.tags .cmp{display:inline-block}
+
+/* header */
+.hdr{display:flex;align-items:center;justify-content:space-between;gap:12px;height:56px;padding:0 16px;border-bottom:1px solid var(--line);background:#fff}
+.hdr .cf{width:160px;height:auto}
+.hdr .ph{width:120px;height:auto}
+
+/* CTA */
+.cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:56px;padding:0 20px;border-radius:8px;background:var(--green);color:var(--black);font:700 18px/1 var(--font);text-decoration:none;cursor:pointer;border:0}
+.cta:hover{filter:brightness(.95)}
+.cta:focus-visible,.adj:focus-visible,input:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
+
+/* check list */
+.checks{display:grid;gap:8px}
+.checks li{display:flex;gap:10px;align-items:flex-start;font-size:15px;line-height:1.3}
+.checks svg{flex:none;width:20px;height:20px}
+
+/* trustpilot (figures copied from the live page) */
+.tp{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;font-size:13px}
+.tp .stars{display:flex;gap:2px}
+.tp .stars i{display:grid;place-items:center;width:20px;height:20px;background:#00B67A;color:#fff;font-style:normal;font-size:13px;line-height:1}
+.tp .name{font-weight:700}
+
+/* legal */
+.legal{padding:24px 16px 112px;max-width:760px;margin:0 auto;font-size:14px;line-height:1.45}
+.legal p+p{margin-top:12px}
+
+/* sticky bar */
+.sticky{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;align-items:center;gap:12px;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:#fff;box-shadow:0 -2px 12px rgba(0,0,0,.14);transform:translateY(110%);transition:transform .2s ease}
+.sticky.on{transform:none}
+.sticky .info{min-width:0;flex:1;line-height:1.25}
+.sticky .info b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sticky .info span{font-size:14px}
+.sticky .cta{width:auto;flex:none;min-height:48px;padding:0 22px;font-size:16px}
+.v-control .sticky{display:none}
+@media (prefers-reduced-motion:reduce){.sticky{transition:none}}
+
+/* toast */
+#toast{position:fixed;left:16px;right:16px;bottom:88px;z-index:30;padding:12px 14px;border-radius:8px;background:var(--purple);color:#fff;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s}
+#toast.on{opacity:1}
+
+/* ---------- Control (copy of the live page) ---------- */
+.v-control .hdr{height:84px;border:0}
+.ctl{margin:8px 16px 0;padding:20px 16px 16px;background:var(--tint-live);border-radius:8px}
+.ctl h1{font-size:26px;line-height:30px}
+.ctl .lead{margin-top:12px;font-size:16px;line-height:24px}
+.ctl .checks{margin-top:14px;gap:8px}
+.ctl .checks li{font-size:16px;line-height:23px;align-items:center}
+.ctl .checks svg{width:22px;height:22px}
+.ctl .tp{flex-direction:column;align-items:flex-start;gap:4px;margin-top:12px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.ctl .tp .stars i{width:26px;height:26px;font-size:16px}
+.ctl .row{display:flex;gap:12px;align-items:center;margin:14px 0}
+.ctl .row .th{flex:none;width:90px;height:70px;border-radius:6px}
+.ctl .row img{width:90px;height:70px;object-fit:contain;border-radius:6px}
+.ctl .row b{display:block;font-size:16px;line-height:1.3}
+.ctl .row .sp{font-size:15px;white-space:nowrap}
+.ctl .row .sp span+span::before{content:"|";margin:0 5px}
+
+/* ---------- Car first (A / B / C) ---------- */
+.hero{position:relative;aspect-ratio:16/9;background:var(--tint);overflow:hidden}
+.hero img{width:100%;height:100%;object-fit:cover}
+.hero .tag{position:absolute;left:12px;bottom:12px;padding:4px 10px;border-radius:99px;background:rgba(0,0,0,.72);color:#fff;font-size:12px}
+.hero.ph{display:grid;place-items:center;align-content:center;gap:8px;color:var(--purple)}
+.hero.ph svg{width:55%;max-width:260px;height:auto}
+.hero.ph span{font-size:13px;color:var(--muted)}
+.hero.ph .tag{color:#fff}
+.car-info{padding:14px 16px 0}
+.car-info h1{font-size:22px;line-height:1.2}
+.car-info .price{margin-top:2px;font-size:22px;font-weight:700;line-height:1.2}
+.specs{display:flex;flex-wrap:wrap;margin-top:4px;font-size:14px;color:var(--muted)}
+.specs li+li::before{content:"|";margin:0 8px}
+.panel{margin:14px 16px 0;padding:16px;border-radius:8px;background:var(--tint)}
+.panel h2{font-size:20px;line-height:1.2}
+.panel .checks{margin-top:12px}
+.panel .cta{margin-top:14px}
+.panel .hard{margin-top:10px;font-size:12px;line-height:1.35;color:var(--muted)}
+.panel .tp{margin-top:12px}
+/* minimal: car details live inside the card, and the card floats over the bottom of the photo */
+.v-b .panel{position:relative;margin:-24px 16px 0;padding:18px 16px 16px}
+.v-b .panel .car-info{padding:0;display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;align-items:baseline}
+.v-b .panel .car-info h1,.v-b .panel .car-info .price{font-size:22px;margin:0}
+.v-b .panel .car-info .price{grid-column:2;grid-row:1;font-weight:700;color:var(--muted);white-space:nowrap}
+.v-b .panel .specs{grid-column:1 / -1}
+.v-b .panel .specs{font-size:14px}
+
+/* B: estimate */
+.est{margin-top:10px;padding:10px 12px;border-radius:8px;background:#fff;border:1px solid var(--line)}
+.est .main{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.est .lbl{font-size:13px;color:var(--muted)}
+.est .fig{font-size:28px;font-weight:700;line-height:1;color:var(--purple)}
+.est .per{font-size:14px}
+.est .note{margin-top:4px;font-size:12px;line-height:1.35;color:var(--muted)}
+.adj{margin:0 0 0 auto;padding:0;border:0;background:none;color:var(--purple);font:700 13px/1.3 var(--font);text-decoration:underline;cursor:pointer}
+.slider{margin-top:8px}
+.slider[hidden]{display:none}
+.slider label{display:flex;justify-content:space-between;font-size:13px}
+.slider input{width:100%;accent-color:var(--purple)}
+
+/* desktop */
+@media (min-width:1024px){
+  .hdr{height:72px;padding:0 max(24px,calc((100% - 1100px)/2))}
+  .hdr .cf{width:190px}.hdr .ph{width:150px}
+  .layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:40px;align-items:start;max-width:1100px;margin:0 auto;padding:32px 24px 0}
+  .hero{aspect-ratio:4/3;border-radius:8px}
+  .car-info{padding:16px 0 0}
+  .car-info h1{font-size:30px}.car-info .price{font-size:28px}.specs{font-size:16px}
+  .panel{margin:0;padding:28px;position:sticky;top:24px}
+  .panel h2{font-size:26px}
+  .panel .checks li{font-size:16px}
+  .legal{max-width:1100px;padding:32px 24px 48px}
+  .v-control .legal{max-width:640px;padding-left:0;padding-right:0}
+  .sticky{display:none}
+  /* Redesign stays one column on desktop: photo, car details, then the button card */
+  .v-a .layout,.v-b .layout{display:block;max-width:640px;padding:24px 16px 0}
+  .v-a .hero,.v-b .hero{aspect-ratio:16/9}
+  .v-a .panel,.v-b .panel{margin-top:16px;padding:20px;position:static}
+  .v-a .panel h2,.v-b .panel h2{font-size:22px}
+  .v-a .legal,.v-b .legal{max-width:640px;padding-left:16px;padding-right:16px}
+  .v-a .hdr,.v-b .hdr{padding:0 max(16px,calc((100% - 640px)/2 + 16px))}
+  .v-b .panel{position:relative;top:0;margin:-32px 24px 0;padding:20px}
+  .v-b .panel .car-info{padding:0}
+  .v-b .panel .car-info h1,.v-b .panel .car-info .price{font-size:26px}
+  .v-b .panel .specs{font-size:15px}
+  .v-control .ctl{max-width:640px;margin:24px auto 0;padding:40px 32px 24px}
+  .v-control .hdr{padding:0 max(24px,calc((100% - 640px)/2))}
+}
+</style>
+</head>
+<body>
+<nav class="pages" aria-label="Pages"><a href="viewer.html">Comparison</a><a href="compare.html">Overview</a><a href="index.html?v=a&review=1" aria-current="page">Single page</a></nav>
+<div id="review"></div>
+<header class="hdr">
+  <img class="cf" src="assets/horizontal_purple.png" alt="Car Finance 247">
+  <img class="ph" src="https://www.carfinance247.co.uk/dA/56c359bbb1/pistonheads-logo.svg" alt="PistonHeads">
+</header>
+<main id="app"></main>
+<div class="sticky" id="sticky" aria-hidden="true"></div>
+<div id="toast" role="status"></div>
+
+<script>
+(function(){
+  var q = new URLSearchParams(location.search);
+  var variant = (q.get('v') || 'control').toLowerCase();
+  if (['control','a','b'].indexOf(variant) < 0) variant = 'control';
+  var review = q.get('review') === '1';
+  document.body.className = 'v-' + variant + (review ? ' review' : '') + (review || q.get('tags') === '1' ? ' tags' : '');
+
+  /* vehicle data: real advert 21270720 by default, overridable with CarGurus-style params */
+  var FIX = {
+    ph:   {year:'2021', make:'BMW', model:'M135i', price:20197, mileage:54124, fuel:'Petrol', transmission:'Automatic',
+           imageUrl:'https://img.pistonheads.com/LargeSize/bmw/1-series/m135i-xdrive-step-auto/bmw-1-series-m135i-xdrive-step-auto-1502792996-1.jpg?resize=800'},
+    low:  {year:'2015', make:'BMW', model:'2 Series', price:6499, mileage:76010, fuel:'Petrol', transmission:'Automatic',
+           imageUrl:'https://static-eu.cargurus.com/images/forsale/2026/10/08/14/37/2015_bmw_2_series-pic-2144874151672998113-1024x768.jpeg'},
+    long: {year:'2022', make:'Mercedes-AMG', model:'A 45 S 4MATIC+ Plus Premium Edition', price:29750, mileage:18240, fuel:'Petrol', transmission:'Automatic', imageUrl:''}
+  };
+  var BY_ADVERT = {'21270720': 'ph'};
+  var car = Object.assign({}, FIX[q.get('car')] || FIX[BY_ADVERT[q.get('advertid')]] || FIX.ph);
+  ['year','make','model','fuel','transmission','imageUrl'].forEach(function(k){ if (q.get(k) !== null) car[k] = q.get(k); });
+  if (q.get('Model')) car.model = q.get('Model');
+  ['price','mileage'].forEach(function(k){ var n = parseInt(q.get(k),10); if (n > 0) car[k] = n; });
+
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function gbp(n){ return '£' + Math.round(n).toLocaleString('en-GB'); }
+  var name = [car.year, car.make, car.model].filter(Boolean).join(' ');
+  var shortName = car.make + ' ' + String(car.model).split(' ').slice(0,2).join(' ');
+  var specs = [car.mileage ? car.mileage.toLocaleString('en-GB') + ' miles' : '', car.transmission, car.fuel].filter(Boolean);
+
+  /* hire purchase estimate: representative APR and term from the live page's representative example */
+  var APR = 0.1768, TERM = 60;
+  function monthly(p){ var r = Math.pow(1 + APR, 1/12) - 1; return p * r / (1 - Math.pow(1 + r, -TERM)); }
+  window.__monthly = monthly;
+
+  var CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#00D4B5"/><path d="M6.5 12.5l3.7 3.7 7.3-7.8" fill="none" stroke="#000" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  function checks(items){ return '<ul class="checks">' + items.map(function(t){ return '<li>' + CHECK + '<span>' + t + '</span></li>'; }).join('') + '</ul>'; }
+  var TP = '<div class="tp"><span class="stars"><i>★</i><i>★</i><i>★</i><i>★</i><i>★</i></span><span><span class="name">Trustpilot</span> &nbsp;TrustScore <b>4.9</b> | <b>59,668</b> reviews</span></div>';
+  var CMP = '<span class="cmp">⚠ compliance</span>';
+  var CAR_SVG = '<svg viewBox="0 0 200 80" aria-hidden="true"><path d="M12 56V44c0-5 3-8 8-9l26-6 22-18c2-2 5-3 8-3h52c4 0 7 1 10 4l20 17 24 6c6 2 8 5 8 10v13c0 3-2 5-5 5h-9a18 18 0 0 1-36 0H81a18 18 0 0 1-36 0H17c-3 0-5-2-5-5z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/></svg>';
+
+  var LEGAL = '<section class="legal" id="legal">' +
+    '<p>By providing your information, you agree to our <a href="#privacy">Privacy Policy</a>.</p>' +
+    '<p>Representative Example: Borrow £12,000 over 5 years with a £0 deposit. Representative 17.68% APR fixed rate. Monthly payment: £294.31. Option to purchase fee £10 payable. Total cost of credit: £5,668.60. Total amount repayable: £17,668.60.</p>' +
+    '<p>Car Finance 247 Limited is a credit broker not a lender.</p>' +
+    '<p>Registered address: Universal Square, Devonshire Street North, Manchester, M12 6JH.</p>' +
+    '<p>Car Finance 247 will pay us a commission for introducing a customer who takes out a motor finance agreement. The commission paid is a fixed amount per agreement that is directly linked to the amount you borrow.</p>' +
+    '</section>';
+
+  function heroHtml(){
+    var tag = '';
+    if (!car.imageUrl) return '<div class="hero ph">' + CAR_SVG + '<span>Photo not available</span>' + tag + '</div>';
+    return '<div class="hero"><img src="' + esc(car.imageUrl) + '" alt="' + esc(name) + '" width="800" height="500" fetchpriority="high" decoding="async">' + tag + '</div>';
+  }
+
+  var html = '';
+  if (variant === 'control') {
+    html = '<div class="ctl">' +
+      '<h1>Get a quote on this vehicle with Car Finance 247</h1>' +
+      '<p class="lead">PistonHeads have partnered with Car Finance 247, a leading credit broker who will find you the best deal from their wide panel of lenders.</p>' +
+      checks(['Rates from 8.9% APR','Get a decision in minutes','No deposit options available']) +
+      '<div class="tp"><b class="name">★ Trustpilot</b><span class="stars"><i>★</i><i>★</i><i>★</i><i>★</i><i>★</i></span><span>TrustScore <b>4.9</b> | <b>59,668</b> reviews</span></div>' +
+      '<div class="row"><div class="th">' + (car.imageUrl ? '<img src="' + esc(car.imageUrl) + '" alt="' + esc(name) + '" width="90" height="70" loading="lazy">' : '') + '</div>' +
+      '<div><b>' + gbp(car.price) + '</b><b>' + esc(name) + '</b><div class="sp">' + specs.map(function(s){ return '<span>' + esc(s) + '</span>'; }).join('') + '</div></div></div>' +
+      '<a class="cta" href="#continue" data-cta>Continue <span aria-hidden="true">→</span></a></div>' + LEGAL;
+  } else {
+    /* Copy only uses statements already on the live page or in the approved consumer proof points; no rate, savings or credit-score claims. */
+    var minimal = variant === 'b';   /* minimal: no headline or reassurances, just the button and Trustpilot */
+    var headline, list, label = 'Continue';
+    headline = 'See what this car could cost you each month.';
+    list = ['Get a decision in minutes', 'No obligation to go ahead', 'Answer a few questions and we’ll do the searching'];
+    var carInfo = '<div class="car-info"><h1>' + esc(name) + '</h1><p class="price">' + gbp(car.price) + '</p>' +
+      '<ul class="specs">' + specs.map(function(s){ return '<li>' + esc(s) + '</li>'; }).join('') + '</ul></div>';
+    html = '<div class="layout"><section class="car">' + heroHtml() +
+      (minimal ? '' : carInfo) + '</section>' +
+      '<section class="panel">' + (minimal ? carInfo : '') + (minimal ? '' : '<h2>' + headline + '</h2>') +
+      '<a class="cta" href="#continue" data-cta>' + label + ' <span aria-hidden="true">→</span></a>' + (minimal ? '' : checks(list)) + TP + '</section></div>' + LEGAL;
+  }
+  document.getElementById('app').innerHTML = html;
+
+  /* a failed photo never leaves an empty gap */
+  document.querySelectorAll('.hero img').forEach(function(img){
+    img.addEventListener('error', function(){
+      var h = img.parentNode; h.className = 'hero ph';
+      h.innerHTML = CAR_SVG + '<span>Photo not available</span>';
+    });
+  });
+
+  /* sticky Continue bar, shown once the main button has scrolled out of view */
+  var main = document.querySelector('[data-cta]');
+  var sticky = document.getElementById('sticky');
+  sticky.innerHTML = '<div class="info"><b>' + esc(name) + '</b><span>' + gbp(car.price) + '</span></div><a class="cta" href="#continue" data-cta>Continue <span aria-hidden="true">→</span></a>';
+  if ('IntersectionObserver' in window && main && variant !== 'control') {
+    new IntersectionObserver(function(es){
+      var on = !es[0].isIntersecting;
+      sticky.classList.toggle('on', on); sticky.setAttribute('aria-hidden', String(!on));
+    }, {threshold: 0.6}).observe(main);
+  }
+
+  /* prototype CTA behaviour */
+  var toast = document.getElementById('toast'), t;
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('[data-cta]'); if (!a) return;
+    e.preventDefault();
+    console.log('CTA click', {variant: variant, sticky: !!e.target.closest('#sticky')});
+    toast.textContent = 'Prototype only: this would continue to /driving-licence';
+    toast.classList.add('on'); clearTimeout(t); t = setTimeout(function(){ toast.classList.remove('on'); }, 2200);
+  });
+
+  /* review-mode variant switcher */
+  if (review) {
+    var labels = {control:'Control (live)', a:'Redesign', b:'Redesign (minimal)'};
+    document.getElementById('review').innerHTML = '<span>Variant:</span>' + Object.keys(labels).map(function(k){
+      var p = new URLSearchParams(location.search); p.set('v', k);
+      return '<a href="?' + p.toString() + '"' + (k === variant ? ' class="on"' : '') + '>' + labels[k] + '</a>';
+    }).join('') + '';
+  }
+})();
+</script>
+</body>
+</html>

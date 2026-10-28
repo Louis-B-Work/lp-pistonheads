@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PistonHeads landing page redesign options</title>
+<style>
+:root{--purple:#6905F2;--green:#00D4B5;--tint:#F0E6FE;--line:#DCCEF7;--muted:rgba(0,0,0,.7);--font:"Helvetica Neue",Helvetica,Arial,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:#000;font:400 16px/1.5 var(--font)}
+h1,h2,h3,p,ul{margin:0}
+h1,h2,h3,b{font-weight:700}
+.wrap{max-width:1240px;margin:0 auto;padding:0 16px}
+.top{background:var(--purple);color:#fff;padding:32px 0}
+.top img{height:26px;width:auto;margin-bottom:20px;filter:none}
+.top h1{font-size:32px;line-height:1.15;max-width:760px}
+.top p{margin-top:12px;max-width:760px;font-size:18px}
+section{padding:32px 0;border-bottom:1px solid var(--line)}
+h2{font-size:24px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.card{padding:16px;border-radius:8px;background:var(--tint)}
+.card h3{font-size:16px;margin-bottom:6px}
+.card p,.card li{font-size:15px}
+ul{padding-left:18px}
+table{border-collapse:collapse;width:100%;max-width:720px;font-size:15px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left}
+.phones{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start}
+.phone{width:375px}
+.phone h3{font-size:16px;margin-bottom:2px}
+.phone p{font-size:13px;color:var(--muted);margin-bottom:8px;min-height:38px}
+.frame{width:375px;height:667px;border:1px solid #000;border-radius:14px;overflow:hidden}
+.frame iframe{width:375px;height:667px;border:0}
+.desk{display:flex;gap:24px;flex-wrap:wrap}
+.dwrap{width:640px;max-width:100%}
+.dwrap h3{font-size:16px;margin-bottom:6px}
+.dframe{width:640px;height:400px;overflow:hidden;border:1px solid #000;border-radius:6px}
+.dframe iframe{width:1280px;height:800px;border:0;transform:scale(.5);transform-origin:0 0}
+.flag{display:inline-block;padding:1px 6px;border-radius:4px;background:#E32739;color:#fff;font-size:12px;font-weight:700}
+a{color:var(--purple)}
+.pages{display:flex;gap:4px;align-items:center;height:36px;padding:0 16px;background:#fff;border-bottom:1px solid #DCCEF7;font:700 13px "Helvetica Neue",Helvetica,Arial,sans-serif;position:sticky;top:0;z-index:20;box-sizing:border-box}
+.pages a{padding:3px 10px;border-radius:99px;color:#6905F2;text-decoration:none}
+.pages a:hover{background:#F0E6FE}
+.pages a[aria-current]{background:#6905F2;color:#fff}
+</style>
+</head>
+<body>
+<nav class="pages" aria-label="Pages"><a href="viewer.html">Comparison</a><a href="compare.html" aria-current="page">Overview</a><a href="index.html?v=a&review=1">Single page</a></nav>
+<div class="top"><div class="wrap">
+  <img src="assets/horizontal_purple.png" alt="Car Finance 247" style="background:#fff;padding:6px 10px;border-radius:6px">
+  <h1>PistonHeads landing page: redesign options</h1>
+  <p>Two alternatives are below, shown next to a copy of the live page. All three are working prototypes with the same advert data (advert 21270720, 2021 BMW M135i).</p>
+</div></div>
+
+<div class="wrap">
+<section>
+  <h2>What we found</h2>
+  <div class="grid">
+    <div class="card"><h3>The two pages are not the same</h3><p>CarGurus says getting a quote won’t impact your credit score. PistonHeads swaps that for “No deposit options available”, which speaks to budget buyers and drops the main reassurance.</p></div>
+    <div class="card"><h3>The car is an afterthought</h3><p>The advert photo is a 90 × 70px thumbnail that loads late, so first paint shows a gap. Visitors come from a specific car, and the page opens with a pitch about a broker.</p></div>
+    <div class="card"><h3>Button height is only part of it</h3><p>The live button is already inside a 667px-tall screen. Both redesigns lift it by about 160px, to 443px, and add a sticky Continue bar that is always on screen.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Continue button position (375 × 667 phone)</h2>
+  <table>
+    <tr><th>Version</th><th>Button top – bottom</th><th>Notes</th></tr>
+    <tr><td>Control (live)</td><td>602 – 658px</td><td>Matches the live page. No sticky bar.</td></tr>
+    <tr><td>Redesign</td><td>443 – 499px</td><td>Button directly under the headline, reassurances below it. Sticky bar once it scrolls away.</td></tr>
+    <tr><td>Redesign (minimal)</td><td>330 – 386px</td><td>No headline and no reassurances: the car details move into the purple card, which floats over the bottom of the photo, with the button and Trustpilot below.</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>Mobile (375 × 667)</h2>
+  <div class="phones">
+    <div class="phone"><h3>Control (live)</h3><p>Copy of the live page: broker pitch, finance bullets, thumbnail.</p><div class="frame"><iframe src="index.html?v=control" title="Control"></iframe></div></div>
+    <div class="phone"><h3>Redesign</h3><p>Large photo, one clear line, the button, then three short reassurances.</p><div class="frame"><iframe src="index.html?v=a" title="Redesign"></iframe></div></div>
+    <div class="phone"><h3>Redesign (minimal)</h3><p>Car details sit inside the purple card, which floats over the photo, with the button and Trustpilot below.</p><div class="frame"><iframe src="index.html?v=b" title="Redesign minimal"></iframe></div></div>
+  </div>
+</section>
+
+<section>
+  <h2>Desktop (1280 × 800, shown at half size)</h2>
+  <div class="desk">
+    <div class="dwrap"><h3>Control (live)</h3><div class="dframe"><iframe src="index.html?v=control" title="Control desktop"></iframe></div></div>
+    <div class="dwrap"><h3>Redesign</h3><div class="dframe"><iframe src="index.html?v=a" title="Redesign desktop"></iframe></div></div>
+    <div class="dwrap"><h3>Redesign (minimal)</h3><div class="dframe"><iframe src="index.html?v=b" title="Redesign minimal desktop"></iframe></div></div>
+  </div>
+</section>
+
+<section>
+  <h2>Wording rules for the redesigns</h2>
+  <ul>
+    <li>No rate, savings, monthly-payment or credit-score claims. Every line is either already on the live page or in the approved consumer proof points, so none should need new sign-off. Compliance should still confirm before launch.</li>
+    <li>All legal text is kept word for word and moved below the button.</li>
+  </ul>
+  <p style="margin-top:12px">Add <code>?review=1</code> to any variant’s address to see the variant switcher. Try <code>&amp;car=low</code> or <code>&amp;car=long</code> to test other cars.</p>
+</section>
+</div>
+</body>
+</html>
