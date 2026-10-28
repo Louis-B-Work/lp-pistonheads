@@ -94,12 +94,6 @@ label.opt{display:inline-flex;align-items:center;gap:6px}
     if (state.tags) p.set('tags','1');
     return 'page.html?' + p.toString();
   }
-  function sync(){
-    var p = new URLSearchParams(pass.toString());
-    p.set('show', state.show.join(',')); p.set('mode', state.mode); p.set('device', state.device);
-    if (state.tags) p.set('tags','1');
-    try { history.replaceState(null, '', '?' + p.toString()); } catch (e) {}
-  }
 
   function toggle(k){
     if (state.mode === 'single') { state.show = [k]; }
@@ -169,7 +163,7 @@ label.opt{display:inline-flex;align-items:center;gap:6px}
       fr.src = url + '&review=0';
       stage.appendChild(col);
     });
-    layoutFrames(); sync();
+    layoutFrames();
   }
 
   document.getElementById('mode').addEventListener('click', function(e){ var b = e.target.closest('button'); if (b) setMode(b.dataset.mode); });
