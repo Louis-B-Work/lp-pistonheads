@@ -4,7 +4,7 @@ const root = __dirname, port = +process.argv[2] || 8765;
 const types = {'.html':'text/html; charset=utf-8','.png':'image/png','.svg':'image/svg+xml','.css':'text/css','.js':'text/javascript','.md':'text/plain; charset=utf-8'};
 http.createServer((req, res) => {
   let p = decodeURIComponent(req.url.split('?')[0]);
-  if (p === '/') p = '/viewer.html';
+  if (p === '/') p = '/index.html';
   const f = path.normalize(path.join(root, p));
   if (!f.startsWith(root)) { res.writeHead(403); return res.end(); }
   fs.readFile(f, (e, d) => {
