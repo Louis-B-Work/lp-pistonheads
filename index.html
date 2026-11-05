@@ -14,13 +14,18 @@ b,h1{font-weight:700}
 button{font:inherit;cursor:pointer}
 button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
 
-.bar{position:sticky;top:36px;z-index:10;background:#fff;border-bottom:1px solid var(--line);padding:10px 16px;display:grid;gap:10px}
+.bar{background:#fff;border-bottom:1px solid var(--line);padding:24px 24px 20px}
+.bar .top{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:20px 40px}
+.bar .title{flex:1 1 380px;max-width:680px}
+.bar h1{font-size:24px;line-height:1.2}
+.bar .title p{margin-top:6px;font-size:14px;line-height:1.45;color:var(--muted)}
+.controls{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:flex-end;gap:12px 24px}
+.grp .lbl,.pick .lbl{display:block;margin-bottom:6px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.pick{margin-top:20px}
 .pages{display:flex;gap:4px;align-items:center;height:36px;padding:0 16px;background:#fff;border-bottom:1px solid #DCCEF7;font:700 13px "Helvetica Neue",Helvetica,Arial,sans-serif;position:sticky;top:0;z-index:20;box-sizing:border-box}
 .pages a{padding:3px 10px;border-radius:99px;color:#6905F2;text-decoration:none}
 .pages a:hover{background:#F0E6FE}
 .pages a[aria-current]{background:#6905F2;color:#fff}
-.row{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
-.row h1{font-size:16px;margin-right:8px}
 .seg{display:inline-flex;border:1px solid var(--purple);border-radius:8px;overflow:hidden}
 .seg button{padding:6px 14px;border:0;background:#fff;color:var(--purple);font-weight:700}
 .seg button[aria-pressed="true"]{background:var(--purple);color:#fff}
@@ -31,10 +36,12 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 .flag{display:inline-block;margin-left:4px;padding:0 5px;border-radius:4px;background:#E32739;color:#fff;font-size:11px;font-weight:700;vertical-align:middle}
 label.opt{display:inline-flex;align-items:center;gap:6px}
 .hint{color:var(--muted);font-size:13px}
+.pick .hint{display:block;margin-top:8px}
+.pick .hint:empty{display:none}
 
 /* final-design flag */
 .badge{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:99px;background:var(--purple);color:#fff;font-size:11px;font-weight:700;vertical-align:middle;white-space:nowrap}
-.final{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin:0;padding:10px 16px;background:var(--tint);border-bottom:1px solid var(--line);font-size:14px}
+.final{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin:0;padding:12px 24px;background:var(--tint);border-bottom:1px solid var(--line);font-size:14px}
 .final a{color:var(--purple);font-weight:700}
 #stage{display:flex;flex-wrap:wrap;gap:24px;justify-content:center;align-items:flex-start;padding:20px 16px 48px}
 .col{display:grid;gap:6px;justify-items:start}
@@ -50,19 +57,31 @@ label.opt{display:inline-flex;align-items:center;gap:6px}
 <body>
 <nav class="pages" aria-label="Pages"><a href="index.html" aria-current="page">Comparison</a><a href="compare.html">Overview</a><a href="page.html?v=a">Single page</a></nav>
 <header class="bar">
-  <div class="row">
-    <h1>PistonHeads redesign comparison</h1>
-    <div class="seg" role="group" aria-label="Layout" id="mode">
-      <button type="button" data-mode="single">Single</button>
-      <button type="button" data-mode="side">Side by side</button>
+  <div class="top">
+    <div class="title">
+      <h1>PistonHeads landing page: redesign comparison</h1>
+      <p>See the live page next to the proposed redesigns, on mobile or desktop. They are working prototypes using advert 21270720, a 2021 BMW M135i.</p>
     </div>
-    <div class="seg" role="group" aria-label="Device" id="device">
-      <button type="button" data-device="mobile">Mobile 375</button>
-      <button type="button" data-device="desktop">Desktop 1280</button>
+    <div class="controls">
+      <div class="grp"><span class="lbl" id="lbl-mode">View</span>
+        <div class="seg" role="group" aria-labelledby="lbl-mode" id="mode">
+          <button type="button" data-mode="single">One at a time</button>
+          <button type="button" data-mode="side">Side by side</button>
+        </div>
+      </div>
+      <div class="grp"><span class="lbl" id="lbl-device">Device</span>
+        <div class="seg" role="group" aria-labelledby="lbl-device" id="device">
+          <button type="button" data-device="mobile">Mobile</button>
+          <button type="button" data-device="desktop">Desktop</button>
+        </div>
+      </div>
     </div>
+  </div>
+  <div class="pick">
+    <span class="lbl">Designs to show</span>
+    <div class="chips" id="chips"></div>
     <span class="hint" id="hint"></span>
   </div>
-  <div class="chips" id="chips"></div>
 </header>
 <p class="final"><span><span class="badge" style="margin:0">Final</span> <b>Redesign (minimal)</b> is the final design, passed to Risk and the developers for approval.</span><a href="redesign.html">Open the clean page ↗</a></p>
 <main id="stage"></main>
