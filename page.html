@@ -53,10 +53,12 @@ ul{padding:0;list-style:none}
 .checks svg{flex:none;width:20px;height:20px}
 
 /* trustpilot (figures copied from the live page) */
-.tp{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;font-size:13px}
-.tp .stars{display:flex;gap:2px}
-.tp .stars i{display:grid;place-items:center;width:20px;height:20px;background:#00B67A;color:#fff;font-style:normal;font-size:13px;line-height:1}
-.tp .name{font-weight:700}
+.tp{display:block;width:142px;margin-top:12px;color:#111;text-decoration:none}
+.tp .tp-logo{display:block;width:78px;height:19px;margin-bottom:4px}
+.tp .tp-stars{display:block;width:142px;height:26px}
+.tp .tp-info{display:block;height:22px;font-size:9px;line-height:22px;white-space:nowrap}
+.tp .tp-info b{font-weight:700}
+.tp .tp-div{display:inline-block;width:1px;height:11px;margin:0 6px;background:#111;vertical-align:middle}
 
 /* legal */
 .legal{padding:24px 16px 112px;max-width:760px;margin:0 auto;font-size:14px;line-height:1.45}
@@ -85,8 +87,8 @@ ul{padding:0;list-style:none}
 .ctl .checks{margin-top:14px;gap:8px}
 .ctl .checks li{font-size:16px;line-height:23px;align-items:center}
 .ctl .checks svg{width:22px;height:22px}
-.ctl .tp{flex-direction:column;align-items:flex-start;gap:4px;margin-top:12px;padding-bottom:12px;border-bottom:1px solid var(--line)}
-.ctl .tp .stars i{width:26px;height:26px;font-size:16px}
+.ctl .tp{margin-top:12px;margin-bottom:0}
+.ctl .tpwrap{padding-bottom:12px;border-bottom:1px solid var(--line)}
 .ctl .row{display:flex;gap:12px;align-items:center;margin:14px 0}
 .ctl .row .th{flex:none;width:90px;height:70px;border-radius:6px}
 .ctl .row img{width:90px;height:70px;object-fit:contain;border-radius:6px}
@@ -112,7 +114,6 @@ ul{padding:0;list-style:none}
 .panel .checks{margin-top:12px}
 .panel .cta{margin-top:14px}
 .panel .hard{margin-top:10px;font-size:12px;line-height:1.35;color:var(--muted)}
-.panel .tp{margin-top:12px}
 /* minimal: car details live inside the card, and the card floats over the bottom of the photo */
 .v-b .panel{position:relative;margin:-24px 16px 0;padding:18px 16px 16px}
 .v-b .panel .car-info{padding:0;display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;align-items:baseline}
@@ -211,7 +212,7 @@ ul{padding:0;list-style:none}
 
   var CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#00D4B5"/><path d="M6.5 12.5l3.7 3.7 7.3-7.8" fill="none" stroke="#000" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   function checks(items){ return '<ul class="checks">' + items.map(function(t){ return '<li>' + CHECK + '<span>' + t + '</span></li>'; }).join('') + '</ul>'; }
-  var TP = '<div class="tp"><span class="stars"><i>★</i><i>★</i><i>★</i><i>★</i><i>★</i></span><span><span class="name">Trustpilot</span> &nbsp;TrustScore <b>4.9</b> | <b>59,668</b> reviews</span></div>';
+  var TP = '<a class="tp" href="https://uk.trustpilot.com/review/carfinance247.co.uk" target="_blank" rel="noopener noreferrer" aria-label="Trustpilot: TrustScore 4.9, 60,104 reviews"><img class="tp-logo" src="assets/trustpilot_logo.svg" alt="Trustpilot"><img class="tp-stars" src="assets/trustpilot_stars.svg" alt="" width="142" height="26"><span class="tp-info" aria-hidden="true">TrustScore <b>4.9</b><span class="tp-div"></span><b>60,104</b> reviews</span></a>';
   var CMP = '<span class="cmp">⚠ compliance</span>';
   var CAR_SVG = '<svg viewBox="0 0 200 80" aria-hidden="true"><path d="M12 56V44c0-5 3-8 8-9l26-6 22-18c2-2 5-3 8-3h52c4 0 7 1 10 4l20 17 24 6c6 2 8 5 8 10v13c0 3-2 5-5 5h-9a18 18 0 0 1-36 0H81a18 18 0 0 1-36 0H17c-3 0-5-2-5-5z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/></svg>';
 
@@ -235,7 +236,7 @@ ul{padding:0;list-style:none}
       '<h1>Get a quote on this vehicle with Car Finance 247</h1>' +
       '<p class="lead">PistonHeads have partnered with Car Finance 247, a leading credit broker who will find you the best deal from their wide panel of lenders.</p>' +
       checks(['Rates from 8.9% APR','Get a decision in minutes','No deposit options available']) +
-      '<div class="tp"><b class="name">★ Trustpilot</b><span class="stars"><i>★</i><i>★</i><i>★</i><i>★</i><i>★</i></span><span>TrustScore <b>4.9</b> | <b>59,668</b> reviews</span></div>' +
+      '<div class="tpwrap">' + TP + '</div>' +
       '<div class="row"><div class="th">' + (car.imageUrl ? '<img src="' + esc(car.imageUrl) + '" alt="' + esc(name) + '" width="90" height="70" loading="lazy">' : '') + '</div>' +
       '<div><b>' + gbp(car.price) + '</b><b>' + esc(name) + '</b><div class="sp">' + specs.map(function(s){ return '<span>' + esc(s) + '</span>'; }).join('') + '</div></div></div>' +
       '<a class="cta" href="#continue" data-cta>Continue <span aria-hidden="true">→</span></a></div>' + LEGAL;
