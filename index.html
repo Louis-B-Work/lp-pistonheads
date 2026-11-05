@@ -32,6 +32,10 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 label.opt{display:inline-flex;align-items:center;gap:6px}
 .hint{color:var(--muted);font-size:13px}
 
+/* final-design flag */
+.badge{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:99px;background:var(--purple);color:#fff;font-size:11px;font-weight:700;vertical-align:middle;white-space:nowrap}
+.final{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin:0;padding:10px 16px;background:var(--tint);border-bottom:1px solid var(--line);font-size:14px}
+.final a{color:var(--purple);font-weight:700}
 #stage{display:flex;flex-wrap:wrap;gap:24px;justify-content:center;align-items:flex-start;padding:20px 16px 48px}
 .col{display:grid;gap:6px;justify-items:start}
 .col .cap{display:flex;gap:10px;align-items:baseline;width:100%;justify-content:space-between}
@@ -60,6 +64,7 @@ label.opt{display:inline-flex;align-items:center;gap:6px}
   </div>
   <div class="chips" id="chips"></div>
 </header>
+<p class="final"><span><span class="badge" style="margin:0">Final</span> <b>Redesign (minimal)</b> is the final design, passed to Risk and the developers for approval.</span><a href="redesign.html">Open the clean page ↗</a></p>
 <main id="stage"></main>
 
 <script>
@@ -67,7 +72,7 @@ label.opt{display:inline-flex;align-items:center;gap:6px}
   var VARS = [
     {k:'control', name:'Control (live)', note:'Copy of today’s page'},
     {k:'a', name:'Redesign', note:'Big photo, button, then reassurances'},
-    {k:'b', name:'Redesign (minimal)', note:'Car details in a floating card, no headline'}
+    {k:'b', final:true, name:'Redesign (minimal)', note:'Car details in a floating card, no headline'}
   ];
   var KEYS = VARS.map(function(v){ return v.k; });
   var OWN = ['show','mode','device','tags'];          /* viewer-only params, never passed to the page */
@@ -119,7 +124,7 @@ label.opt{display:inline-flex;align-items:center;gap:6px}
     VARS.forEach(function(v, i){
       var b = document.createElement('button');
       b.type = 'button'; b.className = 'chip'; b.setAttribute('aria-pressed', String(state.show.indexOf(v.k) >= 0));
-      b.innerHTML = '<span><b>' + v.name + '</b>' + (v.flag ? '<span class="flag">compliance</span>' : '') + '<small>' + v.note + '</small></span>';
+      b.innerHTML = '<span><b>' + v.name + '</b>' + (v.final ? '<span class="badge">Final</span>' : '') + '<small>' + v.note + '</small></span>';
       b.addEventListener('click', function(){ toggle(v.k); });
       chipsEl.appendChild(b);
     });
@@ -149,7 +154,7 @@ label.opt{display:inline-flex;align-items:center;gap:6px}
     state.show.forEach(function(k){
       var v = VARS[KEYS.indexOf(k)], col = document.createElement('div'), url = frameUrl(k);
       col.className = 'col';
-      col.innerHTML = '<div class="cap"><h2>' + v.name + '</h2><a target="_blank" rel="noopener">Open full page ↗</a></div>' +
+      col.innerHTML = '<div class="cap"><h2>' + v.name + (v.final ? '<span class="badge">Final</span>' : '') + '</h2><a target="_blank" rel="noopener">Open full page ↗</a></div>' +
         '<div class="dev ' + state.device + '"><iframe title="' + v.name + '"></iframe></div>';
       col.querySelector('a').href = url;
       var fr = col.querySelector('iframe');
