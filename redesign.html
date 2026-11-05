@@ -62,9 +62,9 @@ ul{padding:0;list-style:none}
 .checks svg{flex:none;width:20px;height:20px}
 
 /* Trustpilot: same graphics, size and layout as the live widget (logo and stars are the live page's own SVGs; the build should use the real widget) */
-.tp{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin-top:12px;color:#111;text-decoration:none}   /* one row: stars, logo, score (wraps on narrow screens) */
+.tp{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px;margin-top:12px;color:#111;text-decoration:none}   /* one row: stars, logo, score (wraps on narrow screens) */
 .tp .tp-stars{order:1}
-.tp .tp-logo{order:2;display:block;width:78px;height:19px;position:relative;top:-2px}   /* the lettering sits low in the logo artwork, so nudge it up to line up with the stars and text */
+.tp .tp-logo{order:2;display:block;width:78px;height:19px;position:relative;top:2.6px}   /* shared baseline: the star bar's bottom edge, the lettering's baseline and the score text all sit on one line; the lettering's baseline is 2.6px above the logo image's bottom edge, so drop the image by that much */
 .tp .tp-stars{display:block;width:142px;height:26px}
 .tp .tp-info{order:3;display:block;font-size:9px;line-height:1.4;white-space:nowrap}
 .tp .tp-info b{font-weight:700}
