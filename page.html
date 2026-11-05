@@ -34,9 +34,9 @@ ul{padding:0;list-style:none}
 .tags .cmp{display:inline-block}
 
 /* header */
-.hdr{display:flex;align-items:center;justify-content:space-between;gap:12px;height:56px;padding:0 16px;border-bottom:1px solid var(--line);background:#fff}
-.hdr .cf{width:160px;height:auto}
-.hdr .ph{width:120px;height:auto}
+.hdr{display:flex;align-items:center;justify-content:space-between;gap:12px;height:84px;padding:0 16px 0 20px;background:#fff}   /* matches the live page: 84px bar, stacked logo 70 x 60, PistonHeads 120 x 17 */
+.hdr .cf{width:70px;height:60px;flex:none}
+.hdr .ph{width:120px;height:17px;flex:none}
 
 /* CTA */
 .cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:56px;padding:0 20px;border-radius:8px;background:var(--green);color:var(--black);font:700 18px/1 var(--font);text-decoration:none;cursor:pointer;border:0}
@@ -73,7 +73,6 @@ ul{padding:0;list-style:none}
 #toast.on{opacity:1}
 
 /* ---------- Control (copy of the live page) ---------- */
-.v-control .hdr{height:84px;border:0}
 .ctl{margin:8px 16px 0;padding:20px 16px 16px;background:var(--tint-live);border-radius:8px}
 .ctl h1{font-size:26px;line-height:30px}
 .ctl .lead{margin-top:12px;font-size:16px;line-height:24px}
@@ -131,8 +130,7 @@ ul{padding:0;list-style:none}
 
 /* desktop */
 @media (min-width:1024px){
-  .hdr{height:72px;padding:0 max(24px,calc((100% - 1100px)/2))}
-  .hdr .cf{width:190px}.hdr .ph{width:150px}
+  .hdr{padding:0 max(24px,calc((100% - 1100px)/2))}
   .layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:40px;align-items:start;max-width:1100px;margin:0 auto;padding:32px 24px 0}
   .hero{aspect-ratio:4/3;border-radius:8px}
   .car-info{padding:16px 0 0}
@@ -141,7 +139,7 @@ ul{padding:0;list-style:none}
   .panel h2{font-size:26px}
   .panel .checks li{font-size:16px}
   .legal{max-width:1100px;padding:32px 24px 48px}
-  .v-control .legal{max-width:640px;padding-left:0;padding-right:0}
+  .v-control .legal{max-width:600px;padding-left:0;padding-right:0}
   .sticky{display:none}
   /* Redesign stays one column on desktop: photo, car details, then the button card */
   .v-a .layout,.v-b .layout{display:block;max-width:640px;padding:24px 16px 0}
@@ -154,8 +152,8 @@ ul{padding:0;list-style:none}
   .v-b .panel .car-info{padding:0}
   .v-b .panel .car-info h1,.v-b .panel .car-info .price{font-size:26px}
   .v-b .panel .specs{font-size:15px}
-  .v-control .ctl{max-width:640px;margin:24px auto 0;padding:40px 32px 24px}
-  .v-control .hdr{padding:0 max(24px,calc((100% - 640px)/2))}
+  .v-control .ctl{max-width:600px;margin:24px auto 0;padding:40px 32px 24px}
+  .v-control .hdr{padding:0 max(24px,calc((100% - 600px)/2))}
 }
 </style>
 </head>
@@ -163,7 +161,7 @@ ul{padding:0;list-style:none}
 <nav class="pages" aria-label="Pages"><a href="index.html">Comparison</a><a href="compare.html">Overview</a><a href="page.html?v=a" aria-current="page">Single page</a></nav>
 <div id="review"></div>
 <header class="hdr">
-  <img class="cf" src="assets/horizontal_purple.png" alt="Car Finance 247">
+  <img class="cf" src="assets/stacked_purple.svg" alt="Car Finance 247">
   <img class="ph" src="https://www.carfinance247.co.uk/dA/56c359bbb1/pistonheads-logo.svg" alt="PistonHeads">
 </header>
 <main id="app"></main>
@@ -235,7 +233,7 @@ ul{padding:0;list-style:none}
       '<a class="cta" href="#continue" data-cta>Continue <span aria-hidden="true">→</span></a></div>' + LEGAL;
   } else {
     /* Copy only uses statements already on the live page or in the approved consumer proof points; no rate, savings or credit-score claims. */
-    var minimal = variant === 'b';   /* minimal: no headline or reassurances, just the button and Trustpilot */
+    var minimal = variant === 'b';   /* minimal: no headline, the car details sit inside the card */
     var headline, list, label = 'Continue';
     headline = 'See what this car could cost you each month.';
     list = ['Get a decision in minutes', 'No obligation to go ahead', 'Answer a few questions and we’ll do the searching'];
@@ -244,7 +242,7 @@ ul{padding:0;list-style:none}
     html = '<div class="layout"><section class="car">' + heroHtml() +
       (minimal ? '' : carInfo) + '</section>' +
       '<section class="panel">' + (minimal ? carInfo : '') + (minimal ? '' : '<h2>' + headline + '</h2>') +
-      '<a class="cta" href="#continue" data-cta>' + label + ' <span aria-hidden="true">→</span></a>' + (minimal ? '' : checks(list)) + TP + '</section></div>' + LEGAL;
+      '<a class="cta" href="#continue" data-cta>' + label + ' <span aria-hidden="true">→</span></a>' + checks(list) + TP + '</section></div>' + LEGAL;
   }
   document.getElementById('app').innerHTML = html;
 
