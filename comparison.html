@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PistonHeads redesign comparison</title>
+<style>
+:root{--purple:#6905F2;--green:#00D4B5;--tint:#F0E6FE;--line:#DCCEF7;--muted:rgba(0,0,0,.7);--font:"Helvetica Neue",Helvetica,Arial,sans-serif}
+*{box-sizing:border-box}
+html{overflow-y:scroll}
+body{margin:0;background:#ECE6F7;color:#000;font:400 15px/1.4 var(--font)}
+h1,h2,p{margin:0}
+b,h1{font-weight:700}
+button{font:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
+
+.bar{background:#fff;border-bottom:1px solid var(--line);padding:24px 24px 20px}
+.bar .top{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:20px 40px}
+.bar .title{flex:1 1 380px;max-width:680px}
+.bar h1{font-size:24px;line-height:1.2}
+.bar .title p{margin-top:6px;font-size:14px;line-height:1.45;color:var(--muted)}
+.controls{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:flex-end;gap:12px 24px}
+.grp .lbl,.pick .lbl{display:block;margin-bottom:6px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.pick{margin-top:20px}
+.pages{display:flex;gap:4px;align-items:center;height:36px;padding:0 16px;background:#fff;border-bottom:1px solid #DCCEF7;font:700 13px "Helvetica Neue",Helvetica,Arial,sans-serif;position:sticky;top:0;z-index:20;box-sizing:border-box}
+.pages a{padding:3px 10px;border-radius:99px;color:#6905F2;text-decoration:none}
+.pages a:hover{background:#F0E6FE}
+.pages a[aria-current]{background:#6905F2;color:#fff}
+.seg{display:inline-flex;border:1px solid var(--purple);border-radius:8px;overflow:hidden}
+.seg button{padding:6px 14px;border:0;background:#fff;color:var(--purple);font-weight:700}
+.seg button[aria-pressed="true"]{background:var(--purple);color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:flex;align-items:center;gap:8px;padding:8px 12px;border:2px solid var(--line);border-radius:10px;background:#fff;text-align:left}
+.chip small{display:block;color:var(--muted);font-size:12px;font-weight:400}
+.chip[aria-pressed="true"]{border-color:var(--purple);background:var(--tint)}
+.flag{display:inline-block;margin-left:4px;padding:0 5px;border-radius:4px;background:#E32739;color:#fff;font-size:11px;font-weight:700;vertical-align:middle}
+label.opt{display:inline-flex;align-items:center;gap:6px}
+.hint{color:var(--muted);font-size:13px}
+.pick .hint{display:block;margin-top:8px}
+.pick .hint:empty{display:none}
+
+/* final-design flag */
+.badge{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:99px;background:var(--purple);color:#fff;font-size:11px;font-weight:700;vertical-align:middle;white-space:nowrap}
+.final{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin:0;padding:12px 24px;background:var(--tint);border-bottom:1px solid var(--line);font-size:14px}
+.final a{color:var(--purple);font-weight:700}
+#stage{display:flex;flex-wrap:wrap;gap:24px;justify-content:center;align-items:flex-start;padding:20px 16px 48px}
+.col{display:grid;gap:6px;justify-items:start}
+.col .cap{display:flex;gap:10px;align-items:baseline;width:100%;justify-content:space-between}
+.col .cap h2{font-size:15px}
+.col .cap a{font-size:13px;color:var(--purple)}
+.dev{position:relative;background:#fff;border:1px solid #000;overflow:hidden}
+.dev.mobile{border-radius:18px}
+.dev.desktop{border-radius:6px}
+.dev iframe{display:block;border:0;background:#fff;transform-origin:0 0}
+</style>
+</head>
+<body>
+<nav class="pages" aria-label="Pages"><a href="comparison.html" aria-current="page">Comparison</a><a href="compare.html">Overview</a><a href="page.html?v=a">Single page</a></nav>
+<header class="bar">
+  <div class="top">
+    <div class="title">
+      <h1>PistonHeads landing page: redesign comparison</h1>
+      <p>See the live page next to the proposed redesigns, on mobile or desktop. They are working prototypes using advert 21270720, a 2021 BMW M135i.</p>
+    </div>
+    <div class="controls">
+      <div class="grp"><span class="lbl" id="lbl-mode">View</span>
+        <div class="seg" role="group" aria-labelledby="lbl-mode" id="mode">
+          <button type="button" data-mode="single">One at a time</button>
+          <button type="button" data-mode="side">Side by side</button>
+        </div>
+      </div>
+      <div class="grp"><span class="lbl" id="lbl-device">Device</span>
+        <div class="seg" role="group" aria-labelledby="lbl-device" id="device">
+          <button type="button" data-device="mobile">Mobile</button>
+          <button type="button" data-device="desktop">Desktop</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pick">
+    <span class="lbl">Designs to show</span>
+    <div class="chips" id="chips"></div>
+    <span class="hint" id="hint"></span>
+  </div>
+</header>
+<p class="final"><span><span class="badge" style="margin:0">Final</span> <b>Redesign (minimal)</b> is the final design, passed to Risk and the developers for approval.</span><a href="./">Open the clean page ↗</a></p>
+<main id="stage"></main>
+
+<script>
+(function(){
+  var VARS = [
+    {k:'control', name:'Control (live)', note:'Copy of today’s page'},
+    {k:'a', name:'Redesign', note:'Big photo, button, then reassurances'},
+    {k:'b', final:true, name:'Redesign (minimal)', note:'Car details in a floating card, no headline'}
+  ];
+  var KEYS = VARS.map(function(v){ return v.k; });
+  var OWN = ['show','mode','device','tags'];          /* viewer-only params, never passed to the page */
+
+  var q = new URLSearchParams(location.search);
+  var pass = new URLSearchParams();                    /* everything else (advertid, utm_*) goes to the page */
+  q.forEach(function(v, k){ if (OWN.indexOf(k) < 0) pass.append(k, v); });
+  if (!pass.has('advertid')) { pass.set('advertid','21270720'); pass.set('utm_source','pistonheads'); pass.set('utm_medium','affiliate'); pass.set('utm_campaign','buying-tools'); }
+
+  var state = {
+    mode: q.get('mode') === 'single' ? 'single' : 'side',
+    device: q.get('device') === 'desktop' ? 'desktop' : 'mobile',
+    tags: q.get('tags') === '1',
+    show: (q.get('show') || '').split(',').filter(function(k){ return KEYS.indexOf(k) >= 0; })
+  };
+  if (!state.show.length) state.show = state.mode === 'single' ? ['a'] : ['control','a','b'];
+  if (state.mode === 'single') state.show = state.show.slice(0,1);
+
+  var chipsEl = document.getElementById('chips'), stage = document.getElementById('stage'), hint = document.getElementById('hint');
+
+  function frameUrl(k){
+    var p = new URLSearchParams(pass.toString());
+    p.set('v', k);
+    if (state.tags) p.set('tags','1');
+    return 'page.html?' + p.toString();
+  }
+
+  function toggle(k){
+    if (state.mode === 'single') { state.show = [k]; }
+    else {
+      var i = state.show.indexOf(k);
+      if (i >= 0) { if (state.show.length > 1) state.show.splice(i,1); }
+      else state.show.push(k);
+      state.show.sort(function(a,b){ return KEYS.indexOf(a) - KEYS.indexOf(b); });
+    }
+    render();
+  }
+  function setMode(m){
+    if (m === state.mode) return;
+    state.mode = m;
+    if (m === 'single') state.show = [state.show.filter(function(k){ return k !== 'control'; })[0] || 'control'];
+    else if (state.show.indexOf('control') < 0) state.show = ['control'].concat(state.show);
+    else if (state.show.length === 1) state.show.push('a');
+    render();
+  }
+
+  function buildChips(){
+    chipsEl.innerHTML = '';
+    VARS.forEach(function(v, i){
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'chip'; b.setAttribute('aria-pressed', String(state.show.indexOf(v.k) >= 0));
+      b.innerHTML = '<span><b>' + v.name + '</b>' + (v.final ? '<span class="badge">Final</span>' : '') + '<small>' + v.note + '</small></span>';
+      b.addEventListener('click', function(){ toggle(v.k); });
+      chipsEl.appendChild(b);
+    });
+  }
+
+  function layoutFrames(){
+    var n = state.show.length, W = state.device === 'mobile' ? 375 : 1280;
+    var availH = Math.max(420, window.innerHeight - document.querySelector('.bar').offsetHeight - 36 - 80);   /* fallback until a page has loaded and been measured */
+    var avail = document.documentElement.clientWidth - 32, gap = 24;
+    var cols = state.device === 'mobile' ? n : Math.min(n, 2);   /* desktop wraps to two per row so text stays readable */
+    var s = state.device === 'mobile' ? 1 : Math.min(1, Math.floor((avail - gap * (cols - 1)) / cols) / W);
+    s = Math.max(s, .3);
+    stage.querySelectorAll('.dev').forEach(function(d){
+      var H = d.firstChild._h || Math.round(availH / s);   /* each frame is as tall as its page, so the main screen scrolls, not the frame */
+      d.style.width = Math.round(W * s) + 'px'; d.style.height = Math.round(H * s) + 'px';
+      var f = d.firstChild; f.style.width = W + 'px'; f.style.height = H + 'px'; f.style.transform = 'scale(' + s + ')';
+    });
+    hint.textContent = state.device === 'desktop' && s < 1 ? 'Desktop shown at ' + Math.round(s * 100) + '% to fit' : '';
+  }
+
+  function render(){
+    document.querySelectorAll('#mode button').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.mode === state.mode)); });
+    document.querySelectorAll('#device button').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.device === state.device)); });
+    
+    buildChips();
+    stage.innerHTML = '';
+    state.show.forEach(function(k){
+      var v = VARS[KEYS.indexOf(k)], col = document.createElement('div'), url = frameUrl(k);
+      col.className = 'col';
+      col.innerHTML = '<div class="cap"><h2>' + v.name + (v.final ? '<span class="badge">Final</span>' : '') + '</h2><a target="_blank" rel="noopener">Open full page ↗</a></div>' +
+        '<div class="dev ' + state.device + '"><iframe title="' + v.name + '"></iframe></div>';
+      col.querySelector('a').href = url;
+      var fr = col.querySelector('iframe');
+      fr.setAttribute('scrolling', 'no');
+      fr.addEventListener('load', function(){
+        var doc = fr.contentDocument; if (!doc || !doc.body) return;
+        function fit(){ var h = Math.ceil(doc.body.getBoundingClientRect().height); if (h && h !== fr._h) { fr._h = h; layoutFrames(); } }
+        fit();
+        if (window.ResizeObserver) new ResizeObserver(fit).observe(doc.body);   /* photos and fonts finish loading after the first paint */
+      });
+      fr.src = url + '&review=0';
+      stage.appendChild(col);
+    });
+    layoutFrames();
+  }
+
+  document.getElementById('mode').addEventListener('click', function(e){ var b = e.target.closest('button'); if (b) setMode(b.dataset.mode); });
+  document.getElementById('device').addEventListener('click', function(e){ var b = e.target.closest('button'); if (b){ state.device = b.dataset.device; render(); } });
+  window.addEventListener('resize', layoutFrames);
+  render();
+})();
+</script>
+</body>
+</html>
