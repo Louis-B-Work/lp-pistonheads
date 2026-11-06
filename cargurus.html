@@ -29,10 +29,12 @@ b,h1{font-weight:700}
 h1,p,ul{margin:0}
 ul{padding:0;list-style:none}
 
-/* header: same as the live CarGurus page (84px bar, stacked logo 70 x 60, partnership logo 120 x 38; "In partnership with" is part of that image) */
+/* header: 84px bar, stacked logo 70 x 60; "In partnership with" as text, right aligned above the CarGurus logo (as on the PistonHeads page) */
 .hdr{display:flex;align-items:center;justify-content:space-between;gap:12px;height:84px;padding:0 16px 0 20px}
 .hdr .cf{width:70px;height:60px;flex:none}
-.hdr .partner-logo{width:120px;height:38px;flex:none}
+.hdr .cg{width:180px;height:28.4px;flex:none}
+.partner{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.partner span{font-size:14px;line-height:1.2;color:var(--black);white-space:nowrap}
 
 /* photo */
 .hero{position:relative;aspect-ratio:16/9;background:var(--tint);overflow:hidden}
@@ -105,7 +107,9 @@ ul{padding:0;list-style:none}
 
 <header class="hdr">
   <img class="cf" src="assets/stacked_purple.svg" alt="Car Finance 247">
-  <img class="partner-logo" src="https://www.carfinance247.co.uk/dA/2dadaa7c38/Partnership%20logo.svg" alt="In partnership with CarGurus">
+  <div class="partner"><span>In partnership with</span>
+    <img class="cg" src="https://www.carfinance247.co.uk/dA/853d4aaffd/21617-CarGurus-transparent.webp?t=20261030115032" alt="CarGurus">
+  </div>
 </header>
 
 <main class="layout">
